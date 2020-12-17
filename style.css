@@ -1,0 +1,17 @@
+.options_container {
+  width: 300px;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+}
+#refresh_button {
+  width: 100px;
+  height: 45px;
+  border-radius: 2px;
+  background: green;
+  color: white;
+}
+#matrixSize {
+  background-color: DodgerBlue;
+  color: white;
+}

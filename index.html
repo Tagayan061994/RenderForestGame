@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game of life</title>
+    <meta charset="utf8" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="options_container">
+      <button id="refresh_button" onclick="setup()">Refresh Game</button>
+      <div>
+        <label for="cars">Choose Grid size:</label>
+        <select name="matrixSize" id="matrixSize" onchange="setup();">
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
+    <script src="utils.js"></script>
+    <script src="script.js"></script>
+    <script src="wolf.js"></script>
+    <script src="rabbit.js"></script>
+  </body>
+</html>
