@@ -6,14 +6,21 @@ class Rabbit {
         this.directions = [];
     }
 
+    skipOutOfBorders(direction) {
+        const x = direction[X];
+        const y = direction[Y];
+        return x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length
+    }
+
     setNewDirections() {
         this.directions = [
             [this.x - 1, this.y],
             [this.x, this.y - 1],
             [this.x + 1, this.y],
             [this.x, this.y + 1],
-        ];
+        ].filter(this.skipOutOfBorders);
     }
+
 
     setLeftCordinate() {
         this.directions = [
@@ -38,22 +45,16 @@ class Rabbit {
         ];
     }
 
-    getPossibleMoves(character, stepDirection) {
+    getPossibleMoves(value, stepDirection) {
         stepDirection === "Up" ? this.setUpCordinate()
             : stepDirection === "Down" ? this.setDownCordinate()
                 : stepDirection === "Left" ? this.setLeftCordinate()
                     : stepDirection === "Right" ? this.setRightCordinate() : null;
-        let found = []
-        for (let i in this.directions) {
-            let x = this.directions[i][0]
-            let y = this.directions[i][1]
-            if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == character) {
-                    found.push(this.directions[i])
-                }
-            }
-        }
-        return found;
+        return this.directions.filter(direction => {
+            const x = direction[X];
+            const y = direction[Y];
+            return matrix[y][x] == value;
+        })
     }
 
     move(keyCode) {
@@ -65,7 +66,7 @@ class Rabbit {
             matrix[this.y][this.x] = 0;
             this.x = newX;
             this.y = newY;
-            // this.isGameOver()
+            this.isGameOver()
         }
     }
 

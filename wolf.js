@@ -52,12 +52,14 @@ class Wolf {
     }
 
     calculateShortestDistance(cellValue) {
-        let shortestCell = [];
+
         const possibleCells = this.getPossibleMoves(EMPTY_CELL_INDEX);
         const enemyCell = this.getCellIndexByValue(cellValue);
 
         if (possibleCells.length != 0 && enemyCell.length != 0) {
             const distances = possibleCells.map(this.calcDistance(enemyCell));
+            var indexOfMinDinst = distances.indexOf(Math.min(...distances));
+            return possibleCells[indexOfMinDinst]
         }
     };
 
@@ -74,14 +76,3 @@ class Wolf {
         }
     }
 }
-
-            // console.log("curreent ", possibleCells, enemyCell)
-            // possibleCells.reduce(function (previousValue, currentCell, index, array) {
-            //     console.log("curreent ", currentCell)
-            //     let possX = currentCell[0];
-            //     let possY = currentCell[1];
-            //     let distValue = Math.sqrt((enemyX - possX) ** 2 + (enemyY - possY) ** 2);
-            //     console.log("distValue", distValue)
-            //     previousValue < distValue ? shortestCell = currentCell : null;
-            // });
-            // return shortestCell;
