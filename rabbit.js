@@ -1,48 +1,43 @@
 class Rabbit {
-    constructor(x, y, index) {
+    constructor(x, y, value) {
         this.x = x;
         this.y = y;
-        this.index = index;
+        this.value = value;
         this.directions = [];
     }
 
     skipOutOfBorders(direction) {
-        const x = direction[X];
-        const y = direction[Y];
-        return x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length
+        let x = direction[X];
+        let y = direction[Y];
+        if (x >= 0 && x < matrix[0].length && y < 0) return [x, y + matrix.length];
+        else if (x >= 0 && x < matrix[0].length && y > matrix.length - 1) return [x, y - matrix.length];
+        else if (y >= 0 && y < matrix.length && x < 0) return [x + matrix.length, y];
+        else if (y >= 0 && y < matrix.length && x > matrix.length - 1) return [x - matrix.length, y];
+        else return [x, y];
     }
-
-    setNewDirections() {
-        this.directions = [
-            [this.x - 1, this.y],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y],
-            [this.x, this.y + 1],
-        ].filter(this.skipOutOfBorders);
-    }
-
 
     setLeftCordinate() {
         this.directions = [
             [this.x - 1, this.y],
-        ];
+        ].map(this.skipOutOfBorders);
     }
+
     setRightCordinate() {
         this.directions = [
             [this.x + 1, this.y],
-        ];
+        ].map(this.skipOutOfBorders);
     }
 
     setUpCordinate() {
         this.directions = [
             [this.x, this.y - 1],
-        ];
+        ].map(this.skipOutOfBorders);
     }
 
     setDownCordinate() {
         this.directions = [
             [this.x, this.y + 1],
-        ];
+        ].map(this.skipOutOfBorders);
     }
 
     getPossibleMoves(value, stepDirection) {
@@ -57,24 +52,17 @@ class Rabbit {
         })
     }
 
-    move(keyCode) {
-        let emptyCell = random(this.getPossibleMoves(EMPTY_CELL_INDEX, keyCode))
-        if (emptyCell) {
-            let newX = emptyCell[0]
-            let newY = emptyCell[1]
-            matrix[newY][newX] = this.index
-            matrix[this.y][this.x] = 0;
-            this.x = newX;
-            this.y = newY;
-            this.isGameOver()
-        }
+    setChangeOnMatrix(newCell) {
+        const newX = newCell[X];
+        const newY = newCell[Y];
+        matrix[newY][newX] = this.value;
+        matrix[this.y][this.x] = EMPTY_CELL_VALUE;
+        this.x = newX;
+        this.y = newY;
     }
 
-    isGameOver() {
-        for (let i in wolfArr) {
-            if (this.x === wolfArr[i].x && this.y === wolfArr[i].y) {
-                alert("Game over")
-            }
-        }
+    move(keyCode) {
+        let emptyCell = random(this.getPossibleMoves(EMPTY_CELL_VALUE, keyCode))
+        if (emptyCell) this.setChangeOnMatrix(emptyCell)
     }
 }

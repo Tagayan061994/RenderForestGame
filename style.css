@@ -4,6 +4,7 @@
   display: flex;
   justify-content: space-between;
 }
+
 #refresh_button {
   width: 100px;
   height: 45px;
@@ -11,6 +12,7 @@
   background: green;
   color: white;
 }
+
 #matrixSize {
   background-color: DodgerBlue;
   color: white;
