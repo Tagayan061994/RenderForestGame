@@ -65,7 +65,10 @@ class Rabbit {
 
     isWin() {
         const homeCell = random(this.getPossibleMoves(HOME_VALUE, keyCode))
-        homeCell && this.setChangeOnMatrix(homeCell, WIN_VALUE);
+        if (homeCell) {
+            this.setChangeOnMatrix(homeCell, WIN_VALUE);
+            alert("You win the Game, please restart the game")
+        }
     }
 
 }
