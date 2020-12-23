@@ -3,12 +3,13 @@
   <head>
     <title>Game of life</title>
     <meta charset="utf8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
     <div class="options_container">
-      <button id="refresh_button" onclick="setup()">Refresh Game</button>
+      <button id="refresh_button" onclick="setup()">Restart Game</button>
       <div>
         <label for="cars">Choose Grid size:</label>
         <select name="matrixSize" id="matrixSize" onchange="setup()">
@@ -18,7 +19,7 @@
         </select>
       </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
+    <script src="config.js"></script>
     <script src="utils.js"></script>
     <script src="script.js"></script>
     <script src="wolf.js"></script>

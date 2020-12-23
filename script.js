@@ -1,67 +1,72 @@
-const WOLF_VALUE = 1;
-const RABBIT_VALUE = 2;
-const WALL_VALUE = 3;
-const HOME_VALUE = 4;
-const EMPTY_CELL_VALUE = 0;
-const X = 0;
-const Y = 1;
-let side = 50;
-let rabbit;
-let matrix = [];
-let wolfArr = [];
+const loadImages = () => {
+    ImgUrls = {
+        [RABBIT_VALUE]: loadImage("https://imgix.ranker.com/user_node_img/33/641410/original/bugs-bunny-people-in-tv-photo-u6?fit=crop&fm=pjpg&q=60&w=144&h=144&dpr=2"),
+        [WOLF_VALUE]: loadImage("https://images-na.ssl-images-amazon.com/images/I/71625MTzN5L._AC_SY355_.jpg"),
+        [WALL_VALUE]: loadImage("https://image.shutterstock.com/image-vector/brick-wall-vector-illustration-made-260nw-185568998.jpg"),
+        [HOME_VALUE]: loadImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlLgfQ8TSwCr4IcP9o7MFpij9AUxLCkoGnuQ&usqp=CAU"),
+        [DIE_VALUE]: loadImage("https://yt3.ggpht.com/ytc/AAUvwngI5uBJavHiyQbr4swugYEkB3ZfXGGZddYS3mcL=s900-c-k-c0x00ffffff-no-rj"),
+        [WIN_VALUE]: loadImage("https://image.shutterstock.com/z/stock-vector-comic-speech-bubble-with-expression-text-win-vector-bright-dynamic-cartoon-illustration-in-retro-532612783.jpg")
+    }
+}
 
+//get select size from html select input
+function getSelectSize() {
+    return document.getElementById("matrixSize").value;
+}
 
-function setup() {
-    cleanMatrix()
-    matrix = genMatrix()
-    createCanvas(matrix[0].length * side, matrix.length * side);
+function putCharactersOnMatrix(matrix) {
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x] == WOLF_VALUE) {
-                let wolf = new Wolf(x, y, WOLF_VALUE);
-                wolfArr.push(wolf)
+                let wolf = new Wolf(x, y);
+                wolfArr.push(wolf);
             }
-            if (matrix[y][x] == RABBIT_VALUE) {
-                rabbit = new Rabbit(x, y, RABBIT_VALUE);
-            }
+            if (matrix[y][x] == RABBIT_VALUE) rabbit = new Rabbit(x, y);
         }
     }
 }
 
 //rabbit navigation event
 function keyPressed() {
-    if (keyCode === UP_ARROW) rabbit.move("Up");
-    else if (keyCode === DOWN_ARROW) rabbit.move("Down");
-    else if (keyCode === LEFT_ARROW) rabbit.move("Left");
-    else if (keyCode === RIGHT_ARROW) rabbit.move("Right");
-    if (keyCode === UP_ARROW || keyCode === DOWN_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
-        for (let i in wolfArr) {
-            wolfArr[i].eat();
-        }
+    const isLegalAction = [UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(keyCode);
+    if (isLegalAction) {
+        rabbit.move(keyCode);
+        wolfArr.forEach(wolf => wolf.eat())
     }
     return false; // prevent default
 }
 
+
+function setup() {
+    loadImages();
+    const matrixSize = getSelectSize();
+    clearMatrix()
+    matrix = genMatrix(matrixSize);
+    createCanvas(matrix[0].length * side, matrix.length * side);
+    putCharactersOnMatrix(matrix);
+}
+
+
 function draw() {
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
-            if (matrix[y][x] == WOLF_VALUE) fill("red");
-            else if (matrix[y][x] == RABBIT_VALUE) fill("blue");
-            else if (matrix[y][x] == WALL_VALUE) fill("black");
-            else if (matrix[y][x] == HOME_VALUE) fill("orange");
-            else if (matrix[y][x] == EMPTY_CELL_VALUE) fill("white");
-            rect(x * side, y * side, side, side);
+            rect(x * side, y * side, side, side)
+            if (matrix[y][x] === EMPTY_CELL_VALUE) {
+                fill("#ffffcc")
+            } else {
+                image(ImgUrls[matrix[y][x]], x * side, y * side, side, side)
+            }
         }
     }
 }
 
-function cleanMatrix() {
+function clearMatrix() {
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             matrix[y][x] = 0;
         }
     }
-    wolfArr.length = 0;
+    wolfArr = [];
     rabbit = null;
 }
 

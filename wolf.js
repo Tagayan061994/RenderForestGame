@@ -1,14 +1,13 @@
 class Wolf {
-    constructor(x, y, value) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.value = value;
+        this.value = WOLF_VALUE;
         this.directions = [];
     }
 
     skipOutOfBorders(direction) {
-        const x = direction[X];
-        const y = direction[Y];
+        const [x, y] = direction;
         return x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length
     }
 
@@ -24,8 +23,7 @@ class Wolf {
     getPossibleMovesByValue(value) {
         this.setNewDirections()
         return this.directions.filter(direction => {
-            const x = direction[X];
-            const y = direction[Y];
+            const [x, y] = direction;
             return matrix[y][x] == value;
         })
     }
@@ -40,11 +38,8 @@ class Wolf {
 
     calcDistance(enemyCell) {
         return (possibleCell) => {
-            let enemyX = enemyCell[X];
-            let enemyY = enemyCell[Y];
-
-            let possX = possibleCell[X];
-            let possY = possibleCell[Y];
+            const [enemyX, enemyY] = enemyCell;
+            const [possX, possY] = possibleCell;
             return Math.sqrt((enemyX - possX) ** 2 + (enemyY - possY) ** 2)
         }
     }
@@ -53,17 +48,16 @@ class Wolf {
         const possibleCells = this.getPossibleMovesByValue(EMPTY_CELL_VALUE);
         const enemyCell = this.getCellIndexByValue(cellValue);
 
-        if (possibleCells && possibleCells.length != 0 && enemyCell && enemyCell.length != 0) {
+        if (possibleCells && enemyCell) {
             const distances = possibleCells.map(this.calcDistance(enemyCell));
-            let indexOfMinDinst = distances.indexOf(Math.min(...distances));
-            return possibleCells[indexOfMinDinst];
+            const indexOfMinValue = distances.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
+            return possibleCells[indexOfMinValue];
         }
     }
 
-    setChangeOnMatrix(newCell) {
-        const newX = newCell[X];
-        const newY = newCell[Y];
-        matrix[newY][newX] = this.value;
+    setChangeOnMatrix(newCell, dieValue = 0) {
+        const [newX, newY] = newCell;
+        matrix[newY][newX] = dieValue ? DIE_VALUE : this.value;
         matrix[this.y][this.x] = EMPTY_CELL_VALUE;
         this.x = newX;
         this.y = newY;
@@ -71,14 +65,14 @@ class Wolf {
 
     move() {
         const moveCell = this.calculateShortestDistance(RABBIT_VALUE);
-        if (moveCell && moveCell.length != 0) this.setChangeOnMatrix(moveCell)
+        moveCell && this.setChangeOnMatrix(moveCell);
     }
 
     eat() {
-        const eatingCell = this.getPossibleMovesByValue(RABBIT_VALUE);
-        if (eatingCell && eatingCell.length != 0) {
-            this.setChangeOnMatrix(eatingCell[0])
-            // alert("Game over");
+        const eatingCell = random(this.getPossibleMovesByValue(RABBIT_VALUE));
+        if (eatingCell) {
+            this.setChangeOnMatrix(eatingCell, DIE_VALUE)
+            alert("Game over");
         } else {
             this.move();
         }

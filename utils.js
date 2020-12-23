@@ -1,25 +1,26 @@
 //genereted random number
-function getRandomArbitrary(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function getRandom(max) {
+    return Math.floor(Math.random() * max)
 }
 
-//get select size from select input
-function getSelectSize() {
-    return document.getElementById("matrixSize").value;
+//get random free cell from matrix recursively
+function getRandomFreeCell(matrix) {
+    const [x, y] = [getRandom(matrix.length), getRandom(matrix.length)]
+    if (matrix[x][y] == 0) return [x, y]
+    return getRandomFreeCell(matrix)
 }
 
 //set random value in all matrix 
-function setRandomFreeCellByValue(value, valueCount, matrix, matrixSize) {
+function setRandomFreeCellByValue(value, valueCount, matrix) {
     for (let i = 0; i < valueCount; i++) {
-        let y = Math.floor(Math.random() * matrixSize)
-        let x = Math.floor(Math.random() * matrixSize)
-        if (matrix[y][x] == 0) matrix[y][x] = value
+        const [x, y] = getRandomFreeCell(matrix)
+        matrix[x][y] = value
     }
 }
+
 //gentereted matrix
-function genMatrix() {
+function genMatrix(matrixSize) {
     const matrix = [];
-    const matrixSize = getSelectSize();
     for (let y = 0; y < matrixSize; y++) {
         matrix[y] = [];
         for (let x = 0; x < matrixSize; x++) {
@@ -27,10 +28,10 @@ function genMatrix() {
         }
     }
 
-    setRandomFreeCellByValue(1, 5, matrix, matrixSize);
-    setRandomFreeCellByValue(2, 1, matrix, matrixSize);
-    setRandomFreeCellByValue(3, 5, matrix, matrixSize);
-    setRandomFreeCellByValue(4, 1, matrix, matrixSize);
+    setRandomFreeCellByValue(WOLF_VALUE, WOLF_COUNT, matrix);
+    setRandomFreeCellByValue(RABBIT_VALUE, RABBIT_COUNT, matrix);
+    setRandomFreeCellByValue(WALL_VALUE, WALL_COUNT, matrix);
+    setRandomFreeCellByValue(HOME_VALUE, HOME_COUNT, matrix);
     return matrix;
 }
 
